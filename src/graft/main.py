@@ -42,6 +42,7 @@ def process_individual_image(image, output_dir, size, eps, thresh_top, sigma, sm
     # create graph
     graph_s, posL, imgSkel, imgAF, imgBl, imF, mask, df_pos = utilsF.creategraph(image, size=size, eps=eps, thresh_top=thresh_top, sigma=sigma, small=small)
 
+    # raise Exception("Stopped.")
     # find all dangling edges and mark them
     graphD = utilsF.dangling_edges(graph_s.copy())
 
@@ -58,7 +59,7 @@ def process_individual_image(image, output_dir, size, eps, thresh_top, sigma, sm
     utilsF.draw_graph_filament_nocolor(image, graphTagg, posL, "", 'filament')
     filename =  f'graph.png' if index is None else f'graph{index}.png'
     plt.savefig(os.path.join(output_dir, 'n_graphs', filename))
-    plt.close('all')
+    # plt.close('all')
 
     no_filaments = len(np.unique(np.asarray(list(graphTagg.edges(data='filament')))[:,2]))
     print('filament defined: ', no_filaments)
@@ -225,8 +226,8 @@ def create_all_still(pathsave,img_o,maskDraw,size,eps,thresh_top,sigma,small,ang
 
     mean_len = np.mean(pd_fil_info['filament length'])
     list_len = np.sort(pd_fil_info['filament length'])
-    plt.figure()
-    plt.scatter( np.arange(0,len(list_len)),list_len)
+    # plt.figure()
+    # plt.scatter( np.arange(0,len(list_len)),list_len)
 
 
     mean_angle,var_val = utilsF.circ_stat(pd_fil_info,pathsave)

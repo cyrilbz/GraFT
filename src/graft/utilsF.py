@@ -63,7 +63,8 @@ def segmentation_skeleton(image, sigma, small,thresh_top):
     # 1) gaussian filter
     imG=skimage.filters.gaussian(image,sigma)   
     # 2) frangi tubeness
-    imF = skimage.filters.frangi(imG, sigmas=np.arange(1, 2, 0.1), scale_step=0.1, alpha=0.1, beta=2, gamma=15, black_ridges=False, mode='reflect', cval=0)
+    # imF = skimage.filters.frangi(imG, sigmas=np.arange(1, 2, 0.1), scale_step=0.1, alpha=0.1, beta=2, gamma=15, black_ridges=False, mode='reflect', cval=0)
+    imF = skimage.filters.meijering(imG, black_ridges=False, sigmas = range(1,10,2), mode='constant',cval=0)
     # 3) morph grey closing with SE of disk on r=2
     #circle = skimage.morphology.selem.disk(2)
     #imC = skimage.morphology.grey.closing(imF, circle)
@@ -80,6 +81,10 @@ def segmentation_skeleton(image, sigma, small,thresh_top):
     imS = skimage.morphology.skeletonize(imH > 0)
     # 9) remove small objects
     imageCleaned = skimage.morphology.remove_small_objects(imS, small, connectivity=2) > 0
+    
+    plt.figure()    
+    plt.imshow(imH)
+    
     return(imF,imageCleaned,imH)
 
 def node_initial(imageSkeleton):
@@ -1953,8 +1958,8 @@ def draw_graph_filament_nocolor(image,graph,pos,title,value):
     vmax=max(values)+1
     if(vmax%2==0):
         vmax +=1
-    cmap=plt.get_cmap('tab20',vmax)
-    nx.draw(graph,pos, edge_cmap=cmap, edge_color=values,node_size=0.7,width=3,alpha=0.5)
+    cmap=plt.get_cmap('hsv',vmax)
+    nx.draw(graph,pos, edge_cmap=cmap, edge_color=values,node_size=0.0,width=3,alpha=1)
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin = vmin, vmax=vmax))
     sm._A = []
     #plt.colorbar(sm,orientation='horizontal')
